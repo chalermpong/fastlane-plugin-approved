@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = 's_pong_c@hotmail.com'
 
   spec.summary       = 'Approval helper'
-  # spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-approved"
+  spec.homepage      = "https://github.com/chalermpong/fastlane-plugin-approved"
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   # spec.add_dependency 'your-dependency', '~> 1.0.0'
 
   spec.add_development_dependency('bundler')
-  spec.add_development_dependency('fastlane', '>= 2.199.0')
+  spec.add_development_dependency('fastlane', '>= 1.99.0')
   spec.add_development_dependency('pry')
   spec.add_development_dependency('rake')
   spec.add_development_dependency('rspec')
