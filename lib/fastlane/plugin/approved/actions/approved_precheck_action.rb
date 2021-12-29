@@ -6,8 +6,14 @@ module Fastlane
     class ApprovedPrecheckAction < Action
       def self.run(params)
         repo_path = Dir.getwd
+        repo_pathname = Pathname.new(repo_path)
         UI.message("The approved plugin is working! #{repo_path}")
         git_dirty_files = Actions.sh("git -C #{repo_path} diff --name-only HEAD").split("\n") + Actions.sh("git -C #{repo_path} ls-files --other --exclude-standard").split("\n")
+
+        approved_file_path = params[:approval_file_path]
+        approved_file_name = File.basename(approved_file_path)
+        git_dirty_files.delete(approved_file_name)
+
         unless git_dirty_files.empty?
           error = [
             "Your workspace is not clean. Please clean up your workspace before running approved",
@@ -38,11 +44,12 @@ module Fastlane
 
       def self.available_options
         [
-          # FastlaneCore::ConfigItem.new(key: :your_option,
-          #                         env_name: "APPROVED_YOUR_OPTION",
-          #                      description: "A description of your option",
-          #                         optional: false,
-          #                             type: String)
+          FastlaneCore::ConfigItem.new(key: :approval_file_path,
+                                  env_name: "APPROVED_FILE_PATH",
+                               description: "Path to aproval file",
+                                  optional: false,
+                                      type: String,
+                             default_value: ".approved")
         ]
       end
 
