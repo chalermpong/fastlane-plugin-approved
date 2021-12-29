@@ -2,7 +2,8 @@ lane :example do
   approved_precheck
 
   # Do your check
-  doMyCheck
+  #UI.user_error!("You're not ok so not approved!")
+  UI.message("Checking...")
 
   approved
 end
@@ -11,6 +12,6 @@ def doMyCheck()
   puts("Are you ok? [ok, else failed]")
   answer = gets
   unless answer == "ok"
-    user_error!("You're not ok so not approved!")  
+    
   end
 end

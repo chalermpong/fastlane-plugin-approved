@@ -18,15 +18,20 @@ module Fastlane
         File.expand_path(File.join(repo_pathname, approved_file_absolute_path))
 
         File.open(approved_file_absolute_path, "w") { |f| f.write "#{head}" }
-        # then create a commit with a message
-        Actions.sh("git -C #{repo_path} add #{approved_file_absolute_path}")
-        begin
-          commit_message = "Approved commit #{head}"
-          Actions.sh("git -C #{repo_path} commit -m '#{commit_message}'")
-          UI.success("Committed \"#{commit_message}\" 💾.")
-        rescue => ex
-            UI.error(ex)
-            UI.important("Didn't commit any changes.")
+
+        if params[:no_commit]
+          UI.success("Approved! Your approval file has been updated!")
+        else
+          # then create a commit with a message
+          Actions.sh("git -C #{repo_path} add #{approved_file_absolute_path}")
+          begin
+            commit_message = "Approved commit #{head}"
+            Actions.sh("git -C #{repo_path} commit -m '#{commit_message}'")
+            UI.success("Committed \"#{commit_message}\" 💾.")
+          rescue => ex
+              UI.error(ex)
+              UI.important("Didn't commit any changes.")
+          end
         end
       end
 
@@ -51,10 +56,16 @@ module Fastlane
         [
           FastlaneCore::ConfigItem.new(key: :approval_file_path,
                                   env_name: "APPROVED_FILE_PATH",
-                               description: "Path to aproval file",
-                                  optional: false,
+                               description: "Path to approval file",
+                                  optional: true,
                                       type: String,
-                             default_value: ".approved")
+                             default_value: ".approved"),
+          FastlaneCore::ConfigItem.new(key: :no_commit,
+                                  env_name: "APPROVED_NO_COMMIT",
+                               description: "Update approval file but don't commit",
+                                  optional: true,
+                                      type: Boolean,
+                             default_value: false)
         ]
       end
 
