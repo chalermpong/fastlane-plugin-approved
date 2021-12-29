@@ -8,9 +8,8 @@ module Fastlane
         require 'pathname'
         repo_path = Dir.getwd
         repo_pathname = Pathname.new(repo_path)
-        UI.message("Performing Approved Pre-check!")
         other_action.approved_precheck
-        UI.message("Good. Approved Pre-check passed!!!")
+        
         head = Actions.sh("git -C #{repo_path} rev-parse HEAD").strip
 
         approved_file_path = params[:approval_file_path]

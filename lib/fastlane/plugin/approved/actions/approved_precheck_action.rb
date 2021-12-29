@@ -7,7 +7,7 @@ module Fastlane
       def self.run(params)
         repo_path = Dir.getwd
         repo_pathname = Pathname.new(repo_path)
-        UI.message("The approved plugin is working! #{repo_path}")
+        UI.message("Performing Approved Pre-check!")
         git_dirty_files = Actions.sh("git -C #{repo_path} diff --name-only HEAD").split("\n") + Actions.sh("git -C #{repo_path} ls-files --other --exclude-standard").split("\n")
 
         approved_file_path = params[:approval_file_path]
@@ -20,9 +20,9 @@ module Fastlane
             "Found the following uncommitted files:",
             "  #{git_dirty_files.join("\n  ")}",
           ]
-          UI.user_error!("#{error.join("\n")}")  
+          UI.user_error!("#{error.join("\n")}")
         end
-        
+        UI.message("Good. Approved Pre-check passed!!!")
       end
 
       def self.description
