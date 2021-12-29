@@ -3,16 +3,24 @@ require_relative '../helper/approved_helper'
 
 module Fastlane
   module Actions
-    class ApprovedAction < Action
+    class ApprovedPrecheckAction < Action
       def self.run(params)
         repo_path = Dir.getwd
-        UI.message("Performing Approved Pre-check!")
-        other_action.approved_precheck
-        UI.message("Good. Approved Pre-check passed!!!")
+        UI.message("The approved plugin is working! #{repo_path}")
+        git_dirty_files = Actions.sh("git -C #{repo_path} diff --name-only HEAD").split("\n") + Actions.sh("git -C #{repo_path} ls-files --other --exclude-standard").split("\n")
+        unless git_dirty_files.empty?
+          error = [
+            "Your workspace is not clean. Please clean up your workspace before running approved",
+            "Found the following uncommitted files:",
+            "  #{git_dirty_files.join("\n  ")}",
+          ]
+          UI.user_error!("#{error.join("\n")}")  
+        end
+        
       end
 
       def self.description
-        "Approval helper"
+        "Approval pre-check helper"
       end
 
       def self.authors
@@ -25,7 +33,7 @@ module Fastlane
 
       def self.details
         # Optional:
-        "I will fill it later"
+        "This action checks if there is any uncommitted change in the workspace."
       end
 
       def self.available_options
