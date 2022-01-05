@@ -23,7 +23,7 @@ module Fastlane
         existing_files.each { |file|
           puts " -- remove old approval file > #{file}".yellow
           File.delete(file)
-          Actions.sh("git -C #{repo_path} rm #{file}")
+          #Actions.sh("git -C #{repo_path} rm #{file}")
         }
 
         approved_file_absolute_path = File.join(approved_folder_absolute_path, head)
