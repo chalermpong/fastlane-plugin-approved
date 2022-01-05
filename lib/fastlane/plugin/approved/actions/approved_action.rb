@@ -21,12 +21,13 @@ module Fastlane
 
         existing_files = Dir[File.join(approved_folder_absolute_path, "*")]
         existing_files.each { |file|
+          puts " -- remove old approval file > #{file}".yellow
           File.delete(file)
         }
 
         approved_file_absolute_path = File.join(approved_folder_absolute_path, head)
 
-        puts " -- updated = #{approved_file_absolute_path}".yellow
+        puts " -- create approval file > #{approved_file_absolute_path}".yellow
         File.expand_path(File.join(repo_pathname, approved_file_absolute_path))
 
         File.open(approved_file_absolute_path, "w") { |f| f.write "#{head}" }
