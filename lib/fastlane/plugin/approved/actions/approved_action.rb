@@ -6,14 +6,26 @@ module Fastlane
     class ApprovedAction < Action
       def self.run(params)
         require 'pathname'
+        require 'fileutils'
+
         repo_path = Dir.getwd
         repo_pathname = Pathname.new(repo_path)
         other_action.approved_precheck
         
         head = Actions.sh("git -C #{repo_path} rev-parse HEAD").strip
 
-        approved_file_path = params[:approval_folder]
-        approved_file_absolute_path = approved_file_path.replace approved_file_path.sub("#{repo_pathname}", "./")
+        approved_folder_path = params[:approval_folder]
+        approved_folder_absolute_path = approved_folder_path.replace approved_file_path.sub("#{repo_pathname}", "./")
+        # Prepare Approval Folder
+        FileUtils.mkdir_p approved_folder_absolute_path
+
+        existing_files = Dir[File.join(approved_folder_absolute_path, "*")]
+        existing_files.each { |file|
+          File.delete(file)
+        }
+
+        approved_file_absolute_path = File.join(approved_folder_absolute_path, head)
+
         puts " -- updated = #{approved_file_absolute_path}".yellow
         File.expand_path(File.join(repo_pathname, approved_file_absolute_path))
 
