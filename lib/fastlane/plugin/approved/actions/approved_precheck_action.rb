@@ -12,12 +12,6 @@ module Fastlane
 
         approved_folder_path = params[:approval_folder]
         approved_folder_name = File.basename(approved_folder_path)
-        puts(approved_folder_name)
-        puts ".approve/abcd".start_with?(".approved")
-        git_dirty_files.each { |x| 
-          puts "#{x} <--> #{approved_folder_name}" 
-          puts x.start_with?(approved_folder_name)
-        }
         git_dirty_files.delete_if {|path| 
           path.start_with?(approved_folder_name) 
         }

@@ -15,7 +15,7 @@ module Fastlane
         head = Actions.sh("git -C #{repo_path} rev-parse HEAD").strip
 
         approved_folder_path = params[:approval_folder]
-        approved_folder_absolute_path = approved_folder_path.replace approved_file_path.sub("#{repo_pathname}", "./")
+        approved_folder_absolute_path = approved_folder_path.replace approved_folder_path.sub("#{repo_pathname}", "./")
         # Prepare Approval Folder
         FileUtils.mkdir_p approved_folder_absolute_path
 
