@@ -23,7 +23,6 @@ module Fastlane
         existing_files.each { |file|
           puts " -- remove old approval file > #{file}".yellow
           File.delete(file)
-          #Actions.sh("git -C #{repo_path} rm #{file}")
         }
 
         approved_file_absolute_path = File.join(approved_folder_absolute_path, head)
@@ -38,6 +37,7 @@ module Fastlane
         else
           # then create a commit with a message
           Actions.sh("git -C #{repo_path} add #{approved_file_absolute_path}")
+          existing_files.each { |file| Actions.sh("git -C #{repo_path} rm #{file}") }
           begin
             commit_message = "Approved commit #{head}"
             Actions.sh("git -C #{repo_path} commit -m '#{commit_message}'")
