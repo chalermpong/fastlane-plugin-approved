@@ -10,9 +10,17 @@ module Fastlane
         UI.message("Performing Approved Pre-check!")
         git_dirty_files = Actions.sh("git -C #{repo_path} diff --name-only HEAD").split("\n") + Actions.sh("git -C #{repo_path} ls-files --other --exclude-standard").split("\n")
 
-        approved_file_path = params[:approval_file_path]
-        approved_file_name = File.basename(approved_file_path)
-        git_dirty_files.delete(approved_file_name)
+        approved_folder_path = params[:approval_folder]
+        approved_folder_name = File.basename(approved_folder_path)
+        puts(approved_folder_name)
+        puts ".approve/abcd".start_with?(".approved")
+        git_dirty_files.each { |x| 
+          puts "#{x} <--> #{approved_folder_name}" 
+          puts x.start_with?(approved_folder_name)
+        }
+        git_dirty_files.delete_if {|path| 
+          path.start_with?(approved_folder_name) 
+        }
 
         unless git_dirty_files.empty?
           error = [
@@ -44,10 +52,10 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: :approval_file_path,
-                                  env_name: "APPROVED_FILE_PATH",
-                               description: "Path to aproval file",
-                                  optional: false,
+          FastlaneCore::ConfigItem.new(key: :approval_folder,
+                                  env_name: "APPROVED_FOLDER",
+                               description: "Folder to store approval file",
+                                  optional: true,
                                       type: String,
                              default_value: ".approved")
         ]

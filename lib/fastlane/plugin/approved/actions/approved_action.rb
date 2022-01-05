@@ -12,7 +12,7 @@ module Fastlane
         
         head = Actions.sh("git -C #{repo_path} rev-parse HEAD").strip
 
-        approved_file_path = params[:approval_file_path]
+        approved_file_path = params[:approval_folder]
         approved_file_absolute_path = approved_file_path.replace approved_file_path.sub("#{repo_pathname}", "./")
         puts " -- updated = #{approved_file_absolute_path}".yellow
         File.expand_path(File.join(repo_pathname, approved_file_absolute_path))
@@ -54,9 +54,9 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: :approval_file_path,
-                                  env_name: "APPROVED_FILE_PATH",
-                               description: "Path to approval file",
+          FastlaneCore::ConfigItem.new(key: :approval_folder,
+                                  env_name: "APPROVED_FOLDER",
+                               description: "Folder to store approval file",
                                   optional: true,
                                       type: String,
                              default_value: ".approved"),
